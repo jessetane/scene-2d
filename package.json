@@ -1,6 +1,6 @@
 {
   "name": "scene-2d",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Multitouch capable 2d scene implementing pan, zoom and object selection",
   "scripts": {
     "example": "node example/server.js"
