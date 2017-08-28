@@ -67,7 +67,7 @@ module.exports = class Scene2d extends TouchableArea {
       this.render()
       clearTimeout(this.zoomDebounce)
       this.zoomDebounce = setTimeout(() => {
-        this.dispatchEvent(new Event('zoom'))
+        this.dispatchEvent(new Event('scale'))
       }, 30)
     })
     this.addEventListener('pointerstart', evt => {

@@ -12,7 +12,7 @@ var Scene2d = require('scene-2d')
 customElements.define('scene-2d', Scene2d)
 var scene = document.createElement('scene-2d')
 scene.addEventListener('select', () => console.log('scene selection state changed', scene.selections))
-scene.addEventListener('zoom', () => console.log('scene zoomed', scene.zoom))
+scene.addEventListener('scale', () => console.log('scene zoomed', scene.scale))
 scene.addEventListener('move', () => console.log('scene panned', scene.origin))
 
 // add scene to display
@@ -67,7 +67,7 @@ This is the API for the scene itself, see the [object API](api-objects) below fo
 ### `scene.origin`
 Array of pixel offsets (e.g. `[x,y,z]`) representing the current pan position.
 
-### `scene.zoom`
+### `scene.scale`
 Current zoom scale.
 
 ### `scene.selections`
@@ -79,14 +79,14 @@ Container element for all objects in the scene.
 ## Methods
 
 ### `scene.render()`
-Writes the scene's current `origin` and `zoom` to the display.
+Writes the scene's current `origin` and `scale` to the display.
 
 ## Events
 
 ### `scene.dispatchEvent(new Event('move'))`
 Dispatched when a pan operation ends.
 
-### `scene.dispatchEvent(new Event('zoom'))`
+### `scene.dispatchEvent(new Event('scale'))`
 Dispatched when a zoom operation ends.
 
 ### `scene.dispatchEvent(new Event('select'))`

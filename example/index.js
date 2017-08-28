@@ -4,7 +4,7 @@ var Scene2d = require('../')
 customElements.define('scene-2d', Scene2d)
 var scene = document.createElement('scene-2d')
 scene.addEventListener('select', () => console.log('scene selection state changed', scene.selections))
-scene.addEventListener('zoom', () => console.log('scene zoomed', scene.zoom))
+scene.addEventListener('scale', () => console.log('scene zoomed', scene.scale))
 scene.addEventListener('move', () => console.log('scene panned', scene.origin))
 
 // add scene to display
