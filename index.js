@@ -119,7 +119,7 @@ module.exports = class Scene2d extends TouchableArea {
         var sw = evt.start.selectionWindow
         if (sw) {
           var swRect = sw.getBoundingClientRect()
-          Array.from(this.objects.children).forEach(object => {
+          this.forEachObject(object => {
             if (!object.selectable) return
             var oRect = object.getBoundingClientRect()
             if (!intersects(oRect, swRect)) return
@@ -182,6 +182,17 @@ module.exports = class Scene2d extends TouchableArea {
       }
     })
     this.render()
+  }
+
+  forEachObject (fn, objects) {
+    if (!objects) {
+      objects = this.objects.children
+    }
+    for (var i = 0; i < objects.length; i++) {
+      var object = objects[i]
+      this.forEachObject(fn, object.children)
+      fn(object)
+    }
   }
 
   render () {
