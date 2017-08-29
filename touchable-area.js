@@ -13,7 +13,6 @@ module.exports = class TouchableArea extends HTMLElement {
   }
 
   mousedown (evt) {
-    if (!evt.target.touchable) return
     window.addEventListener('mousemove', this.mousemove)
     window.addEventListener('mouseup', this.mouseup)
     evt.identifier = 'mouse'
@@ -37,7 +36,6 @@ module.exports = class TouchableArea extends HTMLElement {
 
   touchstart (originalEvent) {
     Array.from(originalEvent.changedTouches).forEach(touch => {
-      if (!touch.target.touchable) return
       var pointer = touch
       this.pointers[touch.identifier] = pointer
       this.generateEvent('pointerstart', originalEvent, pointer)
@@ -64,13 +62,13 @@ module.exports = class TouchableArea extends HTMLElement {
   generateEvent (name, originalEvent, start, current) {
     if (!current) current = start
     var evt = new Event(name, { bubbles: true })
+    evt.start = start
+    evt.current = current
     evt.originalEvent = originalEvent
     evt.shiftKey = originalEvent.shiftKey
     evt.metaKey = originalEvent.metaKey
     evt.ctrlKey = originalEvent.ctrlKey
     evt.altKey = originalEvent.altKey
-    evt.start = start
-    evt.current = current
     evt.clientX = current.clientX
     evt.clientY = current.clientY
     evt.deltaX = (current.clientX - start.clientX) / this.scale

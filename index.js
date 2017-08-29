@@ -46,7 +46,6 @@ module.exports = class Scene2d extends TouchableArea {
     this.scale = 1
     this.scaleMax = 2
     this.scaleMin = 0.1
-    this.touchable = true
     this.movable = true
     this.selections = []
     this.addEventListener('origin', () => this.render())
@@ -80,8 +79,9 @@ module.exports = class Scene2d extends TouchableArea {
         this.appendChild(sw)
       } else {
         var object = target.object || target
+        if (!object.movable) return
         if (object.selected) {
-          evt.start.origin = this.selections.map(o => o.origin.slice())
+          evt.start.origin = this.selections.map(o => o.movable ? o.origin.slice() : null)
         } else {
           evt.start.origin = [object.origin.slice()]
         }
@@ -99,11 +99,13 @@ module.exports = class Scene2d extends TouchableArea {
         var x = evt.start.clientX - br.left - (evt.deltaX < 0 ? w : 0)
         var y = evt.start.clientY - br.top - (evt.deltaY < 0 ? h : 0)
         sw.style.transform = `translate3d(${x}px,${y}px,0px)`
-      } else if (evt.start.target.movable) {
-        evt.start.moved = true
+      } else {
         var object = target.object || target
+        if (!object.movable) return
+        evt.start.moved = true
         var selections = object.selected ? this.selections : [object]
         selections.forEach((object, i) => {
+          if (!object.movable) return
           object.origin = [
             evt.start.origin[i][0] + evt.deltaX,
             evt.start.origin[i][1] + evt.deltaY,
@@ -148,7 +150,10 @@ module.exports = class Scene2d extends TouchableArea {
         var object = target.object || target
         if (evt.start.moved) {
           var selections = object.selected ? this.selections : [object]
-          selections.forEach(object => object.dispatchEvent(new Event('move')))
+          selections.forEach(object => {
+            if (!object.movable) return
+            object.dispatchEvent(new Event('move'))
+          })
         } else if (object.selectable) {
           if (object.selected) {
             if (evt.start.shiftKey) {

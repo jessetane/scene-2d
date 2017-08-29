@@ -16,10 +16,14 @@ customElements.define('object-2d', class extends HTMLElement {
   constructor () {
     super()
     this.origin = [0,0,0]
-    this.touchable = true
+    this.movable = true
     this.selectable = true
-    this.addEventListener('origin', () => this.render())
-    this.addEventListener('select', () => this.render())
+    this.addEventListener('origin', () => {
+      this.style.transform = `translate3d(${this.origin[0]}px,${this.origin[1]}px,${this.origin[2]}px)`
+    })
+    this.addEventListener('select', () => {
+      this.classList[this.selected ? 'add' : 'remove']('selected')
+    })
     this.addEventListener('move', () => {
       console.log('object moved', this.origin)
     })
@@ -29,14 +33,7 @@ customElements.define('object-2d', class extends HTMLElement {
     this.classList.add('object-2d')
     this.innerHTML = `<div id=handle></div>`
     var handle = this.querySelector('#handle')
-    handle.touchable = true
-    handle.movable = true
     handle.object = this
-  }
-
-  render () {
-    this.classList[this.selected ? 'add' : 'remove']('selected')
-    this.style.transform = `translate3d(${this.origin[0]}px,${this.origin[1]}px,${this.origin[2]}px)`
   }
 })
 
