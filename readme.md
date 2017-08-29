@@ -24,10 +24,14 @@ customElements.define('object-2d', class extends HTMLElement {
   constructor () {
     super()
     this.origin = [0,0,0]
-    this.touchable = true
+    this.movable = true
     this.selectable = true
-    this.addEventListener('origin', () => this.render())
-    this.addEventListener('select', () => this.render())
+    this.addEventListener('origin', () => {
+      this.style.transform = `translate3d(${this.origin[0]}px,${this.origin[1]}px,${this.origin[2]}px)`
+    })
+    this.addEventListener('select', () => {
+      this.classList[this.selected ? 'add' : 'remove']('selected')
+    })
     this.addEventListener('move', () => {
       console.log('object moved', this.origin)
     })
@@ -37,14 +41,7 @@ customElements.define('object-2d', class extends HTMLElement {
     this.classList.add('object-2d')
     this.innerHTML = `<div id=handle></div>`
     var handle = this.querySelector('#handle')
-    handle.touchable = true
-    handle.movable = true
     handle.object = this
-  }
-
-  render () {
-    this.classList[this.selected ? 'add' : 'remove']('selected')
-    this.style.transform = `translate3d(${this.origin[0]}px,${this.origin[1]}px,${this.origin[2]}px)`
   }
 })
 
@@ -60,7 +57,7 @@ $ npm run example
 ```
 
 ## API (scene)
-This is the API for the scene itself, see the [object API](api-objects) below for individual objects.
+This is the API for the scene itself, see the [object API](#api-objects) below for individual objects.
 
 ## Properties
 
@@ -83,13 +80,13 @@ Writes the scene's current `origin` and `scale` to the display.
 
 ## Events
 
-### `scene.dispatchEvent(new Event('move'))`
+### `scene.addEventListener('move', fn)`
 Dispatched when a pan operation ends.
 
-### `scene.dispatchEvent(new Event('scale'))`
+### `scene.addEventListener('scale', fn)`
 Dispatched when a zoom operation ends.
 
-### `scene.dispatchEvent(new Event('select'))`
+### `scene.addEventListener('select', fn)`
 Dispatched when the scene's selection state has changed.
 
 ## API (objects)
@@ -97,30 +94,30 @@ Any elements you append to `scene.objects` may implement these properties or lis
 
 ## Properties
 
-### `object.origin`
-Array of pixel offsets (e.g. `[x,y,z]`) representing the object's current position. Required if `object.movable` is set to true `true`.
+### `object.object`
+Pointer to another object to consider as the target. Useful for implementing grip or handle interfaces.
+
+### `object.selectable`
+Boolean indicating whether the object is selectable.
 
 ### `object.selected`
 Boolean representing the object's selection state.
 
-### `object.touchable`
-Boolean indicating whether the element should be considered touchable by the scene.
-
 ### `object.movable`
-Boolean indicating whether the element should be considered draggable by the scene.
+Boolean indicating whether the object is movable.
 
-### `object.object`
-Pointer to another element that should be moved or selected rather than target itself. Useful for implementing a grip or handle interfaces.
+### `object.origin`
+Array of pixel offsets (e.g. `[x,y,z]`) representing the object's current position. Required if `object.movable` is set to true `true`.
 
 ## Events
 
-### `object.dispatchEvent(new Event('origin'))`
+### `object.addEventListener('origin', fn)`
 Dispatched during a drag operation.
 
-### `object.dispatchEvent(new Event('move'))`
+### `object.addEventListener('move', fn)`
 Dispatched when a drag operation ends.
 
-### `object.dispatchEvent(new Event('select'))`
+### `object.addEventListener('select', fn)`
 Dispatched when the object's selection state has changed.
 
 ## Releases
